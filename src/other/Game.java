@@ -27,6 +27,7 @@ public class Game implements Serializable{
     private String mapNameGlobalOwner;
     private String playerNameGlobal;
     private String mapOwner;
+    private boolean isTest = false;
 
     public Game(String playerNameInput){
         logger.info("Игра создана");
@@ -50,6 +51,8 @@ public class Game implements Serializable{
     }
 
     public Game(){
+        isTest = true;
+
         scanner = new Scanner(System.in);
 
         gameMap = new GameMap(20);
@@ -64,7 +67,7 @@ public class Game implements Serializable{
         gameMap.placeWings(2);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
 
-        scanner.nextLine();
+        // scanner.nextLine();
     }
 
     private void setGameMap(){
@@ -156,8 +159,10 @@ public class Game implements Serializable{
                 return 0;
             }
 
-            userSave();
-            GameSaver.saveGame(this, "Autosave " + Calendar.getInstance().getTime().toString(), playerName);
+            if (!isTest) {
+                userSave();
+                GameSaver.saveGame(this, "Autosave " + Calendar.getInstance().getTime().toString(), playerName);
+            }
         }
     }
 

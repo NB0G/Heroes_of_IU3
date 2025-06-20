@@ -37,7 +37,7 @@ public class PlayerTest {
 
         GameMap gameMap = new GameMap(20);//11 20
 
-        player = new Player(gameMap);
+        player = new Player(gameMap, "TestPlayer");
         enemy = new Enemy(gameMap);
         player.setEnemy(enemy);
         enemy.setEnemy(player);

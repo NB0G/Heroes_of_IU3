@@ -3,3 +3,6 @@ player2,seed20,1
 player,fileName,2
 player2,newgame,1
 player,mynewseed20frompl2,2
+owner1,mapA,8
+votedPlayer,mapX,21
+owner2,mapB,16

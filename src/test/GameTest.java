@@ -13,7 +13,7 @@ public class GameTest {
     @Test
     public void testPlayerWins() {
         InputStream originalSystemIn = System.in;
-        String data = "5 4 5 5 4 5 5 5 4 5 5 4 5 5 4 5 5 5 -1 -1 -1 -1 -1 -1 4 5 5 4 5 -1 -1";
+        String data = "5 4 5 5 4 5 5 5 4 5 5 4 5 5 4 5 5 5 -1 -1 -1 -1 -1 -1 4 5 5 4 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1";
         InputStream is = new ByteArrayInputStream(data.getBytes());
         System.setIn(is);
 
@@ -27,7 +27,7 @@ public class GameTest {
     @Test
     public void testEnemyWins() {
         InputStream originalSystemIn = System.in;
-        String data = "5 4 5 5 4 5 5 5 4 5 5 4 5 5 4 5 5 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1";
+        String data = "5 4 5 5 4 5 5 5 4 5 5 4 5 5 4 5 5 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1";
         InputStream is = new ByteArrayInputStream(data.getBytes());
         System.setIn(is);
 

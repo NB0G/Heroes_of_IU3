@@ -154,6 +154,3 @@ public class BattleTest {
         assertEquals(1, startUnitsNum - endUnitsNum);
     }
 }
-
-//перехватить ввод
-//аннотации перед методами посмотреть
