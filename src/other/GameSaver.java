@@ -1,10 +1,18 @@
 package other;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameSaver {
     public static void saveGame(Game game, String fileName, String player){
@@ -54,5 +62,63 @@ public class GameSaver {
                 }
             }
         }
+    }
+
+    public static void enhanceMapPoints(String mapOwner, String mapName){
+        String csvPath = "saves/votes.csv";
+        List<String[]> rows = new ArrayList<>();
+        boolean found = false;
+        try {
+            File file = new File(csvPath);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+            try (FileReader fileReader = new FileReader(csvPath);
+                 CSVReader csvReader = new CSVReaderBuilder(fileReader).build()) {
+                List<String[]> allRows = csvReader.readAll();
+                for (String[] parts : allRows) {
+                    if (parts.length == 3 && parts[0].equals(mapOwner) && parts[1].equals(mapName)) {
+                        int votes = Integer.parseInt(parts[2]);
+                        votes++;
+                        parts[2] = String.valueOf(votes);
+                        found = true;
+                    }
+                    rows.add(parts);
+                }
+            }
+            if (!found) {
+                rows.add(new String[]{mapOwner, mapName, "1"});
+            }
+            try (FileWriter fileWriter = new FileWriter(csvPath, false);
+                 CSVWriter csvWriter = new CSVWriter(fileWriter,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.NO_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.DEFAULT_LINE_END)) {
+                for (String[] row : rows) {
+                    csvWriter.writeNext(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getAmplifier(String playerName){
+        String csvPath = "saves/votes.csv";
+        int amp = 1;
+        try (FileReader fileReader = new FileReader(csvPath);
+            CSVReader csvReader = new CSVReaderBuilder(fileReader).build()) {
+            List<String[]> allRows = csvReader.readAll();
+            for (String[] parts : allRows) {
+                if (parts.length == 3 && parts[0].equals(playerName)) {
+                    int votes = Integer.parseInt(parts[2]);
+                    if (votes >= 2) amp++;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return amp;
     }
 }

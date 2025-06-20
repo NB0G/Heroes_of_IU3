@@ -16,6 +16,7 @@ import objects.types.Nothing;
 import objects.types.Wings;
 import other.Battle;
 import other.Castle;
+import other.GameSaver;
 import other.Plasable;
 import terrains.Terrain;
 import terrains.types.EnemyCastle;
@@ -24,7 +25,7 @@ import terrains.types.Rock;
 
 public class Player implements Serializable{
     private static final Logger logger = LogManager.getLogger(Player.class);
-    private /*transient*/ Scanner scanner = new Scanner(System.in);
+    private transient Scanner scanner = new Scanner(System.in);
     protected ArrayList<Hero> heroes = new ArrayList<Hero>();
     protected int coins = 20;
     protected Castle castle = new Castle();
@@ -32,6 +33,7 @@ public class Player implements Serializable{
     protected int turnsInCastle = 0;
     protected int number = 0;
     protected GameMap map;
+    private int points = 0;
     protected static final int[][] directions = {
         {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}
     };
@@ -40,7 +42,8 @@ public class Player implements Serializable{
 
     public Player(){}
 
-    public Player(GameMap map){
+    public Player(GameMap map, String playerName){
+        coins *= GameSaver.getAmplifier(playerName);
         heroes.add(new Hero(10 * speedBoost, 10, 1));
         heroes.get(0).setPosition(map.getPosPlayer(whoAmI()));
         map.placeCharacter(heroes.get(0).getPosition()[1], heroes.get(0).getPosition()[0], heroes.get(0));
@@ -97,10 +100,12 @@ public class Player implements Serializable{
         int pos[] = {map.getYPlayer(whoAmI()), map.getXPlayer(whoAmI())};
         heroes.get(heroes.size() - 1).setPosition(pos);
         map.placeCharacter(heroes.get(heroes.size() - 1).getPosition()[1], heroes.get(heroes.size() - 1).getPosition()[0], heroes.get(heroes.size() - 1));
+        points += 10;
     }
 
     public void killHero(Hero hero){
         heroes.remove(hero);
+        points -= 10;
     }
 
     public int getHeroDirection(Hero hero){
@@ -115,6 +120,7 @@ public class Player implements Serializable{
         if(heroPos[0] == map.getYPlayer(whoAmI()) && heroPos[1] == map.getXPlayer(whoAmI()) && heroes.get(heroNumber).getHorse() == 0 && castle.isStable() == 1){
             heroes.get(heroNumber).setHorse();
             steps *= 2;
+            points += 7;
         }
         return steps;
     }
@@ -142,8 +148,10 @@ public class Player implements Serializable{
 
         if(type instanceof Coin){
             coins++;
+            points++;
         } else if(type instanceof Wings){
             hero.setWings();
+            points += 6;
         }
     }
 
@@ -171,11 +179,13 @@ public class Player implements Serializable{
             map.placeCharacter(heroPos[1], heroPos[0], new Nothing(heroPos[1], heroPos[0]));
             heroes.get(heroNumber).move(dx, dy);
             map.placeCharacter(heroPos[1], heroPos[0], heroes.get(heroNumber));
+            points += 5;
         } else {
             heroesToKill.add(heroes.get(heroNumber));
 
             map.placeCharacter(heroPos[1], heroPos[0], new Nothing(heroPos[1], heroPos[0]));
 
+            points -= 5;
             return 0;
         }
         return newSteps;
@@ -206,7 +216,8 @@ public class Player implements Serializable{
         scanner = new Scanner(System.in);
     }
 
-    public void turn(){
+    public int turn(){
+        points = 0;
         ArrayList<Hero> heroesToKill = new ArrayList<Hero>();
         for(int i = 0; i < heroes.size(); i++){
             int heroPos[] = heroes.get(i).getPosition();
@@ -270,14 +281,17 @@ public class Player implements Serializable{
         killHeroes(heroesToKill);
         checkTurnsInCastle();
         buying();
+        return points;
     }
 
     public void checkTurnsInCastle(){
         for (Hero hero : heroes) {
             if (map.getXY(hero.getPosition()[1], hero.getPosition()[0]) instanceof EnemyCastle && hero.getTeam() == 1) {
                 turnsInCastle += 1;
+                break;
             } else if (map.getXY(hero.getPosition()[1], hero.getPosition()[0]) instanceof OurCastle && hero.getTeam() == 2) {
                 turnsInCastle += 1;
+                break;
             } else {
                 turnsInCastle = 0;
             }

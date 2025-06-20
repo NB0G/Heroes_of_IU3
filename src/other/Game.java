@@ -21,21 +21,25 @@ public class Game implements Serializable{
     private GameMap gameMap;
     private Player player;
     private Enemy enemy;
-    private String playerNamePlusPass;
+    private String playerName;
+    private int points = 0;
+    private String mapNameGlobal;
+    private String mapNameGlobalOwner;
+    private String playerNameGlobal;
+    private String mapOwner;
 
-    public Game(String playerNamePlusPass){
+    public Game(String playerNameInput){
         logger.info("Игра создана");
 
         scanner = new Scanner(System.in);
-        this.playerNamePlusPass = playerNamePlusPass;
+        this.playerName = playerNameInput;
 
         printMessage("set_map");
         setGameMap();
         printMessage("loaded_map");
         gameMap.print();
 
-
-        player = new Player(gameMap);
+        player = new Player(gameMap, playerNameInput);
         enemy = new Enemy(gameMap);
         player.setEnemy(enemy);
         enemy.setEnemy(player);
@@ -51,7 +55,7 @@ public class Game implements Serializable{
         gameMap = new GameMap(20);
         gameMap.print();
 
-        player = new Player(gameMap);
+        player = new Player(gameMap, "Player");
         enemy = new Enemy(gameMap);
         player.setEnemy(enemy);
         enemy.setEnemy(player);
@@ -72,6 +76,8 @@ public class Game implements Serializable{
             String playerName = scanner.next();
             String mapName = scanner.next();
             gameMap = MapProcess.loadMap(mapName, playerName);
+            mapOwner = playerName;
+            mapNameGlobalOwner = mapName;
             if (gameMap == null) {
                 logger.error("Ошибка при загрузке карты map:{}, player:{}", mapName, playerName);
                 printMessage("error_load");
@@ -92,6 +98,7 @@ public class Game implements Serializable{
                 printMessage("error_input");
                 setGameMap();
             }
+            mapOwner = playerName;
         } else {
             printMessage("error_input");
             setGameMap();
@@ -101,16 +108,12 @@ public class Game implements Serializable{
     }
 
     private void saveMap() {
-        printMessage("save_map_or_not");
-        int saveOrNot = scanner.nextInt();
-        if (saveOrNot == 1) {
-            printMessage("save_map");
-            String saveName = scanner.next();
-            MapProcess.saveMap(gameMap, saveName, playerNamePlusPass);
-            logger.info("Карта сохранена под именем: {}", saveName);
-        } else {
-            logger.info("Сохранение карты отменено");
-        }
+        printMessage("save_map");
+        String saveName = scanner.next();
+        MapProcess.saveMap(gameMap, saveName, playerName);
+        playerNameGlobal = playerName;
+        mapNameGlobal = saveName;
+        logger.info("Карта сохранена под именем: {}", saveName);
     }
 
     private void userSave(){
@@ -119,7 +122,7 @@ public class Game implements Serializable{
         if (saveOrNot == 1) {
             printMessage("save_game");
             String saveName = scanner.next();
-            GameSaver.saveGame(this, saveName, playerNamePlusPass);
+            GameSaver.saveGame(this, saveName, playerName);
             logger.info("Игра сохранена под именем: {}", saveName);
         } else {
             logger.info("Сохранение игры отменено");
@@ -127,13 +130,14 @@ public class Game implements Serializable{
     }
 
     public int start(){
+        scanner = new Scanner(System.in);
         logger.info("Игра началась");
         gameMap.print();
         player.initScanner();
         
         while (true) {
             printMessage("player_turn");
-            player.turn();
+            points += player.turn();
             gameMap.print();
             printMessage("enemy_turn");
             enemy.turn();
@@ -153,8 +157,28 @@ public class Game implements Serializable{
             }
 
             userSave();
-            GameSaver.saveGame(this, "Autosave " + Calendar.getInstance().getTime().toString(), playerNamePlusPass);
+            GameSaver.saveGame(this, "Autosave " + Calendar.getInstance().getTime().toString(), playerName);
         }
+    }
+
+    public int getPoints(){
+        return points;
+    }
+
+    public String getMapName(){
+        return mapNameGlobal;
+    }
+
+    public String getMapNameOwner(){
+        return mapNameGlobalOwner;
+    }
+
+    public String getPlayerName(){
+        return playerNameGlobal;
+    }
+
+    public String getMapOwner(){
+        return mapOwner;
     }
 
     private static void printMessage(String messageKey, Object... args) {
