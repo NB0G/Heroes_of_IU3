@@ -24,7 +24,7 @@ import terrains.types.Rock;
 
 public class Player implements Serializable{
     private static final Logger logger = LogManager.getLogger(Player.class);
-    private transient Scanner scanner = new Scanner(System.in);
+    private /*transient*/ Scanner scanner = new Scanner(System.in);
     protected ArrayList<Hero> heroes = new ArrayList<Hero>();
     protected int coins = 20;
     protected Castle castle = new Castle();
@@ -200,6 +200,10 @@ public class Player implements Serializable{
         for(Hero i : heroesToKill){
             this.killHero(i);
         }
+    }
+
+    public void initScanner(){
+        scanner = new Scanner(System.in);
     }
 
     public void turn(){

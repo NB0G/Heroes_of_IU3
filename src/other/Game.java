@@ -21,18 +21,19 @@ public class Game implements Serializable{
     private GameMap gameMap;
     private Player player;
     private Enemy enemy;
-    private String playerName;
+    private String playerNamePlusPass;
 
-    public Game(String playerName){
+    public Game(String playerNamePlusPass){
         logger.info("Игра создана");
 
         scanner = new Scanner(System.in);
-        this.playerName = playerName;
+        this.playerNamePlusPass = playerNamePlusPass;
 
         printMessage("set_map");
         setGameMap();
         printMessage("loaded_map");
         gameMap.print();
+
 
         player = new Player(gameMap);
         enemy = new Enemy(gameMap);
@@ -58,6 +59,8 @@ public class Game implements Serializable{
         gameMap.placeCoins(40);
         gameMap.placeWings(2);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
+
+        scanner.nextLine();
     }
 
     private void setGameMap(){
@@ -93,11 +96,41 @@ public class Game implements Serializable{
             printMessage("error_input");
             setGameMap();
         }
+
+        saveMap();
+    }
+
+    private void saveMap() {
+        printMessage("save_map_or_not");
+        int saveOrNot = scanner.nextInt();
+        if (saveOrNot == 1) {
+            printMessage("save_map");
+            String saveName = scanner.next();
+            MapProcess.saveMap(gameMap, saveName, playerNamePlusPass);
+            logger.info("Карта сохранена под именем: {}", saveName);
+        } else {
+            logger.info("Сохранение карты отменено");
+        }
+    }
+
+    private void userSave(){
+        printMessage("save_game_or_not");
+        int saveOrNot = scanner.nextInt();
+        if (saveOrNot == 1) {
+            printMessage("save_game");
+            String saveName = scanner.next();
+            GameSaver.saveGame(this, saveName, playerNamePlusPass);
+            logger.info("Игра сохранена под именем: {}", saveName);
+        } else {
+            logger.info("Сохранение игры отменено");
+        }
     }
 
     public int start(){
         logger.info("Игра началась");
         gameMap.print();
+        player.initScanner();
+        
         while (true) {
             printMessage("player_turn");
             player.turn();
@@ -119,7 +152,8 @@ public class Game implements Serializable{
                 return 0;
             }
 
-            GameSaver.saveGame(this, "Autosave " + Calendar.getInstance().getTime().toString(), playerName);
+            userSave();
+            GameSaver.saveGame(this, "Autosave " + Calendar.getInstance().getTime().toString(), playerNamePlusPass);
         }
     }
 
@@ -138,7 +172,11 @@ public class Game implements Serializable{
             case "map_gen_start" -> System.out.println("Создание карты. Генерация по сиду (1) или ручная (2)?");
             case "enter_seed" -> System.out.println("Введите сид карты");
             case "error_input" -> System.out.println("Неверный ввод. Попробуйте снова.");
-            case "loaded_map" -> System.out.println("Катра, которая будет использоваться:");
+            case "loaded_map" -> System.out.println("Карта, которая будет использоваться:");
+            case "save_game" -> System.out.println("Введите имя для сохранения игры:");
+            case "save_game_or_not" -> System.out.println("Сохранить игру? (1 - да, 2 - нет)");
+            case "save_map" -> System.out.println("Введите имя для сохранения карты:");
+            case "save_map_or_not" -> System.out.println("Сохранить карту? (1 - да, 2 - нет)");
             default -> System.out.println("Неизвестное сообщение.");
         }
     }

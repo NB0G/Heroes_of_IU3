@@ -1,8 +1,12 @@
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.List;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+
 import java.util.Scanner;
 
 import other.Game;
@@ -10,14 +14,15 @@ import other.GameSaver;
 
 public class Main {
     public static void main(String[] args) {
-        String playerName = null;
-        while (playerName == null) { 
-            playerName = login();
+        String playerNamePlusPass = null;
+        while (playerNamePlusPass == null) {
+            playerNamePlusPass = login();
         }
 
-        Game game = setGame(playerName);
+        Game game = setGame(playerNamePlusPass);
 
-        
+        printMessage("game_started");
+
         int winner = game.start();
         if(winner == 1){
             printMessage("player_win");
@@ -28,7 +33,7 @@ public class Main {
         }
     }
 
-    public static Game setGame(String playerName){
+    public static Game setGame(String playerNamePlusPass){
         Scanner scanner = new Scanner(System.in);
 
         Game game = null;
@@ -37,12 +42,12 @@ public class Main {
         int input = scanner.nextInt();
         scanner.nextLine();
         if(input == 1){
-            game = new Game(playerName);
+            game = new Game(playerNamePlusPass);
         } else if (input == 2){
-            GameSaver.printAvailableGames(playerName);
-            
+            GameSaver.printAvailableGames(playerNamePlusPass);
+
             String fileName = scanner.nextLine();
-            game = GameSaver.loadGame(fileName, playerName);
+            game = GameSaver.loadGame(fileName, playerNamePlusPass);
         }
 
         return game;
@@ -61,10 +66,56 @@ public class Main {
         for (String[] i : data){
             if(i[0].equals(player) && i[1].equals(password)){
                 printMessage("logged_in", player);
-                return player;
+                return player + password;
             }
         }
-        return null;
+
+        printMessage("login_failed");
+
+        return register(player);
+    }
+
+    public static String register(String playerName){
+        printMessage("question");
+        Scanner scanner = new Scanner(System.in);
+        int input = scanner.nextInt();
+        scanner.nextLine();
+
+        if(input == 1){
+            printMessage("registering", playerName);
+            String password = scanner.nextLine();
+            writeCSV(playerName, password);
+            return playerName +  password;
+        } else {
+            printMessage("register_failed");
+            return null;
+        }
+    }
+
+    public static void writeCSV(String playerName, String password){
+    try {
+            File dir = new File("saves");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            File file = new File("saves/players.csv");
+            boolean fileExists = file.exists();
+
+            try (FileWriter fileWriter = new FileWriter(file, true);
+                CSVWriter csvWriter = new CSVWriter(fileWriter,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.NO_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.DEFAULT_LINE_END)) {
+                if (!fileExists) {
+                    csvWriter.writeNext(new String[]{"name", "password"});
+                }
+                csvWriter.writeNext(new String[]{playerName, password});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<String[]> readCSV(){
@@ -87,15 +138,20 @@ public class Main {
             case "draw" -> System.out.println("Ничья!");
             case "load_or_create_game" -> System.out.println("Введите (1), чтобы создать новую игру или (2), чтобы загрузить игру");
             case "logging" -> System.out.println("Введите имя пользователя и пароль");
-            case "logged_in" -> System.out.printf("Выполнен вход как %s", args[0]);
+            case "logged_in" -> System.out.printf("Выполнен вход как %s\n", args[0]);
+            case "login_failed" -> System.out.println("Ошибка входа. Вы хотите создать нового пользователя с таким именем?");
+            case "question" -> System.out.println("1 -  Да, 2 - Нет");
+            case "registering" -> System.out.printf("Регистрация нового пользователя %s, введите пароль: ", args[0]);
+            case "register_failed" -> System.out.println("Регистрация не удалась");
+            case "game_started" -> System.out.println("Игра началась!");
             default -> System.out.println("Неизвестное сообщение.");
         }
     }
 }
 
 /*
-добавить регистрацию нового пользователя
-добавить сохранения пользователя
+// добавить регистрацию нового пользователя
+// добавить сохранения пользователя
 протестировать создание загрузку и сохранение карты
 протестировать вход игрока в систему
 протестировать сохранения

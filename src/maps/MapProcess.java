@@ -31,18 +31,57 @@ public class MapProcess {
         printAvailableMaps();
     }
 
-    public static void printAvailableMaps(){
+    // public static void printAvailableMaps(){
+    //     System.out.println("Доступные карты:");
+    //     String path = "saves/maps/";
+    //     String[] players = new java.io.File(path).list();
+    //     for (String player : players) {
+    //         String newPath = path + player + "/";
+    //         String[] files = new java.io.File(newPath).list();
+    //         System.out.println("Игрок: " + player);
+    //         for (String file : files) {
+    //             System.out.println("Название катры: ");
+    //             System.out.println(file.substring(0, file.length() - 4));
+    //             loadMap(file.substring(0, file.length() - 4), player).print();
+    //         }
+    //     }
+    // }
+
+    public static void printAvailableMaps() {
         System.out.println("Доступные карты:");
         String path = "saves/maps/";
-        String[] players = new java.io.File(path).list();
+        File mapsDir = new File(path);
+        String[] players = mapsDir.list();
+        if (players == null) {
+            System.out.println("Нет доступных карт или директория не найдена.");
+            return;
+        }
         for (String player : players) {
             String newPath = path + player + "/";
-            String[] files = new java.io.File(newPath).list();
+            File playerDir = new File(newPath);
+            String[] files = playerDir.list();
+            if (player.equals(".DS_Store")) {
+                continue;
+            }
+            if (files == null || files.length == 0) {
+                System.out.println("Игрок: " + player + " — нет сохранённых карт.");
+                continue;
+            }
             System.out.println("Игрок: " + player);
             for (String file : files) {
-                System.out.println("Название катры: ");
-                System.out.println(file.substring(0, file.length() - 4));
-                loadMap(file.substring(0, file.length() - 4), player).print();
+                if (!file.endsWith(".ser")) continue;
+                try {
+                    System.out.println("Название карты: ");
+                    System.out.println(file.substring(0, file.length() - 4));
+                    GameMap map = loadMap(file.substring(0, file.length() - 4), player);
+                    if (map != null) {
+                        map.print();
+                    } else {
+                        System.out.println("Ошибка загрузки карты: " + file);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Ошибка при обработке файла " + file + ": " + e.getMessage());
+                }
             }
         }
     }
@@ -114,6 +153,8 @@ public class MapProcess {
 
         printMessage("map_creation_start");
 
+        scanner.nextLine();
+
         while (true) {
             printMessage("enter_cell_data");
             String input = scanner.nextLine();
@@ -164,7 +205,6 @@ public class MapProcess {
             }
         }
 
-        scanner.close();
         return new GameMap(terrainMap, characterMap);
     }
 
