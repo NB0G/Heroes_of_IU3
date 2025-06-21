@@ -8,6 +8,7 @@ public enum TerrainDisplay {
     ENEMYTERRITORY("🛕"),
     ROCK("🪨 "),
     ROADBORDER(""),
+    CAFE("☕"),
     HOTEL("🏨");
 
     private String symbol;

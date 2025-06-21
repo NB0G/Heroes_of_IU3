@@ -51,6 +51,7 @@ public class Game implements Serializable{
         gameMap.placeCoins(40);
         gameMap.placeWings(2);
         gameMap.placeHotel(1);
+        gameMap.placeCafe(1);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
     }
 
@@ -152,7 +153,7 @@ public class Game implements Serializable{
         }
         TimeManager.setCurrentTime(startTimerTime);
         TimeManager.startTimer();
-        TimeManager.createAndStartNpcs(10, gameMap, 1, 20, 1, 20);
+        TimeManager.createAndStartNpcs(15, gameMap, 1, 20, 1, 20);
         logger.info("Временные объекты и NPC инициализированы");
     }
 
