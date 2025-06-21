@@ -17,7 +17,7 @@ public class Funiculer extends TimeObject{
         maxVacations = 0;
     }
 
-    public static int[] funiculer2 = {0, 0};
+    public int[] funiculer2 = {0, 0};
 
     public void setFuniculer2(int x, int y) {
         funiculer2[0] = x;
@@ -30,23 +30,26 @@ public class Funiculer extends TimeObject{
         }
     }
 
-    // public void checkActive(Player player){
-    //     if (player.getObjectOnMap(funiculer2[0], funiculer2[1]) instanceof Nothing){
-    //         isActive = true;
-    //     } else {
-    //         isActive = false;
-    //     }
-    // }
+    public void checkActive(Player player){
+        if (player.getObjectOnMap(funiculer2[0], funiculer2[1]).getClass().equals(Hero.class)){
+            isActive = false;
+        } else {
+            isActive = true;
+        }
+    }
 
     @Override
     public synchronized void getInterface(Player player, Vaitable vacationer) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Добро пожаловать на фуникулер!");
 
-        // checkActive(player);
-        // if (!isActive) {
-        //     return;
-        // }
+
+        if (!isActive) {
+            System.out.println("Фуникулер временно не работает. Пожалуйста, подождите.");
+            System.out.println("Нажмите любую клавишу для выхода.");
+            scanner.nextLine();
+            return;
+        }
 
         boolean hasTicket = false;
         int ticketIndex = -1;
@@ -72,11 +75,5 @@ public class Funiculer extends TimeObject{
 
         player.removeTicket(ticketIndex);
         System.out.println("Спасибо за поездку!");
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }

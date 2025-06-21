@@ -220,10 +220,12 @@ public class GameMap extends Map implements Serializable {
             }
         }
         if (funiculerCoords.size() >= 2) {
-            Funiculer funiculer1 = (Funiculer) map[funiculerCoords.get(0)[1]][funiculerCoords.get(0)[0]];
-            Funiculer funiculer2 = (Funiculer) map[funiculerCoords.get(1)[1]][funiculerCoords.get(1)[0]];
-            funiculer1.setFuniculer2(funiculerCoords.get(1)[0], funiculerCoords.get(1)[1]);
-            funiculer2.setFuniculer2(funiculerCoords.get(0)[0], funiculerCoords.get(0)[1]);
+            int[] coords1 = funiculerCoords.get(0);
+            int[] coords2 = funiculerCoords.get(1);
+            Funiculer funiculer1 = (Funiculer) map[coords1[1]][coords1[0]];
+            Funiculer funiculer2 = (Funiculer) map[coords2[1]][coords2[0]];
+            funiculer1.setFuniculer2(coords2[0], coords2[1]);
+            funiculer2.setFuniculer2(coords1[0], coords1[1]);
         }
     }
 
