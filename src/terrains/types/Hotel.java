@@ -44,7 +44,7 @@ public class Hotel extends TimeObject{
         if (getVacations().size() > 0) {
             System.out.println("Занятые места:");
             for (Vaitable v : getVacations()) {
-                int left = v.getEndTime() - TimeManager.getCurrentTime();
+                int left = (v.getEndTime() - TimeManager.getCurrentTime()) / 20;
                 System.out.println("Освободится через: " + (left > 0 ? left : 0) + " дней");
             }
         }
@@ -65,7 +65,7 @@ public class Hotel extends TimeObject{
         vacationer.setEndTime(TimeManager.getCurrentTime() + days * 20);
         addVacation(vacationer);
         System.out.println("Ожидание " + days + " дней...");
-        vacationer.waitUntillEndTime(this);
+        vacationer.waitUntillEndTime();
         hpBonus = bonus;
         takeBonus(vacationer);
         removeVacation(vacationer);
@@ -89,13 +89,13 @@ public class Hotel extends TimeObject{
                 int inp = scanner.nextInt();
                 if (inp == 1) {
                     processWait(vacationer);
+                    free = maxVacations - getVacations().size();
+                    showFreePlaces();
+                    showOccupiedPlaces();
                 } else {
                     break;
                 }
             }
-            free = maxVacations - getVacations().size();
-            showFreePlaces();
-            showOccupiedPlaces();
             showMenu();
             int inp = scanner.nextInt();
             if (inp == 1) {

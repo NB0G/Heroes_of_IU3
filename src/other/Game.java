@@ -144,6 +144,7 @@ public class Game implements Serializable{
         scanner = new Scanner(System.in);
         TimeManager.setCurrentTime(startTimerTime);
         TimeManager.startTimer();
+        TimeManager.createAndStartNpcs(5, gameMap, 1, 20, 1, 20);
         logger.info("Игра началась");
         gameMap.print();
         player.initScanner();

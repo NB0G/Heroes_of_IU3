@@ -7,6 +7,13 @@ import terrains.TimeObject;
 public class Npc implements Vaitable {
     private volatile int endTime = 0;
 
+    public void goToTimeObject(TimeObject timeObject, int time) {
+        timeObject.addVacation(this);
+        setEndTime(time + TimeManager.getCurrentTime());
+        waitUntillEndTime();
+        timeObject.removeVacation(this);
+    }
+
     public int getEndTime() {
         return endTime;
     }
@@ -15,7 +22,7 @@ public class Npc implements Vaitable {
         this.endTime = endTime;
     }
 
-    public synchronized void waitUntillEndTime(TimeObject timeObject) {
+    public synchronized void waitUntillEndTime() {
         while (TimeManager.getCurrentTime() < endTime) {
             try {
                 Thread.sleep(100);

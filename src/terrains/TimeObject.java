@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import other.Vaitable;
 
 public abstract class TimeObject extends Terrain {
-    private CopyOnWriteArrayList<Vaitable> vacations = new CopyOnWriteArrayList<>();
+    private transient CopyOnWriteArrayList<Vaitable> vacations = new CopyOnWriteArrayList<>();
     protected int maxVacations;
 
     public synchronized void addVacation(Vaitable vacationer) {
