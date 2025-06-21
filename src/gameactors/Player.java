@@ -175,8 +175,8 @@ public class Player implements Serializable{
 
     public synchronized void moveToCoords(int x, int y, Hero hero){
         map.placeCharacter(hero.getPosition()[1], hero.getPosition()[0], new Nothing(hero.getPosition()[1], hero.getPosition()[0]));
-        int dx = x - hero.getPosition()[1];
-        int dy = y - hero.getPosition()[0];
+        int dx = x - hero.getPosition()[0];
+        int dy = y - hero.getPosition()[1];
         hero.move(dx, dy);
         map.placeCharacter(hero.getPosition()[1], hero.getPosition()[0], hero);
     }

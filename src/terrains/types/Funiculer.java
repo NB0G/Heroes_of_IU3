@@ -3,7 +3,6 @@ package terrains.types;
 import entity.Hero;
 import gameactors.Player;
 import java.util.Scanner;
-import objects.types.Nothing;
 import other.Vaitable;
 import terrains.TerrainDisplay;
 import terrains.TimeObject;
@@ -21,8 +20,8 @@ public class Funiculer extends TimeObject{
     public static int[] funiculer2 = {0, 0};
 
     public void setFuniculer2(int x, int y) {
-        funiculer2[0] = 10;
-        funiculer2[1] = 10;
+        funiculer2[0] = x;
+        funiculer2[1] = y;
     }
 
     public void move(Player player, Vaitable vacationer){
@@ -31,23 +30,23 @@ public class Funiculer extends TimeObject{
         }
     }
 
-    public void checkActive(Player player){
-        if (player.getObjectOnMap(funiculer2[0], funiculer2[1]) instanceof Nothing){
-            isActive = true;
-        } else {
-            isActive = false;
-        }
-    }
+    // public void checkActive(Player player){
+    //     if (player.getObjectOnMap(funiculer2[0], funiculer2[1]) instanceof Nothing){
+    //         isActive = true;
+    //     } else {
+    //         isActive = false;
+    //     }
+    // }
 
     @Override
     public synchronized void getInterface(Player player, Vaitable vacationer) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Добро пожаловать на фуникулер!");
 
-        checkActive(player);
-        if (!isActive) {
-            return;
-        }
+        // checkActive(player);
+        // if (!isActive) {
+        //     return;
+        // }
 
         boolean hasTicket = false;
         int ticketIndex = -1;

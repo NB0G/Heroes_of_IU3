@@ -211,21 +211,19 @@ public class GameMap extends Map implements Serializable {
             }
         }
 
-        if (number > 0) {
-            ArrayList<int[]> funiculerCoords = new ArrayList<>();
-            for (int y = 0; y < sizeY; y++) {
-                for (int x = 0; x < sizeX; x++) {
-                    if (map[y][x] instanceof Funiculer) {
-                        funiculerCoords.add(new int[]{x, y});
-                    }
+        ArrayList<int[]> funiculerCoords = new ArrayList<>();
+        for (int y = 0; y < sizeY; y++) {
+            for (int x = 0; x < sizeX; x++) {
+                if (map[y][x] instanceof Funiculer) {
+                    funiculerCoords.add(new int[]{x, y});
                 }
             }
-            if (funiculerCoords.size() >= 2) {
-                Funiculer funiculer1 = (Funiculer) map[funiculerCoords.get(0)[1]][funiculerCoords.get(0)[0]];
-                Funiculer funiculer2 = (Funiculer) map[funiculerCoords.get(1)[1]][funiculerCoords.get(1)[0]];
-                funiculer1.setFuniculer2(funiculerCoords.get(1)[0], funiculerCoords.get(1)[1]);
-                funiculer2.setFuniculer2(funiculerCoords.get(0)[0], funiculerCoords.get(0)[1]);
-            }
+        }
+        if (funiculerCoords.size() >= 2) {
+            Funiculer funiculer1 = (Funiculer) map[funiculerCoords.get(0)[1]][funiculerCoords.get(0)[0]];
+            Funiculer funiculer2 = (Funiculer) map[funiculerCoords.get(1)[1]][funiculerCoords.get(1)[0]];
+            funiculer1.setFuniculer2(funiculerCoords.get(1)[0], funiculerCoords.get(1)[1]);
+            funiculer2.setFuniculer2(funiculerCoords.get(0)[0], funiculerCoords.get(0)[1]);
         }
     }
 
