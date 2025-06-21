@@ -7,6 +7,10 @@ import other.Vaitable;
 public abstract class TimeObject extends Terrain {
     private transient CopyOnWriteArrayList<Vaitable> vacations = new CopyOnWriteArrayList<>();
     protected int maxVacations;
+    
+    public void init() {
+        vacations = new CopyOnWriteArrayList<>();
+    }
 
     public synchronized void addVacation(Vaitable vacationer) {
         if (vacations.size() < maxVacations) {

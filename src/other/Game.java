@@ -14,6 +14,7 @@ import maps.GameMap;
 import maps.MapProcess;
 import objects.types.Wings;
 import terrains.Terrain;
+import terrains.TimeObject;
 import terrains.types.Void;
 
 public class Game implements Serializable{
@@ -140,15 +141,29 @@ public class Game implements Serializable{
         }
     }
 
-    public int start(){
-        scanner = new Scanner(System.in);
+    public void initTimeObjects() {
+        for (int x = 0; x < gameMap.getSizeX(); x++) {
+            for (int y = 0; y < gameMap.getSizeY(); y++) {
+                Terrain obj = gameMap.getXY(x, y);
+                if (obj instanceof TimeObject timeObject) {
+                    timeObject.init();
+                }
+            }
+        }
         TimeManager.setCurrentTime(startTimerTime);
         TimeManager.startTimer();
-        TimeManager.createAndStartNpcs(5, gameMap, 1, 20, 1, 20);
+        TimeManager.createAndStartNpcs(10, gameMap, 1, 20, 1, 20);
+        logger.info("Временные объекты и NPC инициализированы");
+    }
+
+    public int start(){
+        scanner = new Scanner(System.in);
+        initTimeObjects();
+        initTimeObjects();
         logger.info("Игра началась");
         gameMap.print();
         player.initScanner();
-        
+
         while (true) {
             printMessage("player_turn");
             points += player.turn();
