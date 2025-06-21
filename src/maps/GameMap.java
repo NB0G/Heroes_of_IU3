@@ -7,6 +7,7 @@ import objects.types.Nothing;
 import objects.types.Wings;
 import other.Plasable;
 import terrains.Terrain;
+import terrains.types.BarberShop;
 import terrains.types.Cafe;
 import terrains.types.EnemyCastle;
 import terrains.types.EnemyTerritory;
@@ -182,6 +183,18 @@ public class GameMap extends Map implements Serializable {
             if(map[y][x].getClass().equals(Void.class)){
                 number--;
                 map[y][x] = new Cafe();
+            }
+        }
+    }
+
+    public void placeBarberShop(int number){
+        while(number > 0){
+            int x = random.nextInt(sizeX);
+            int y = random.nextInt(sizeY);
+
+            if(map[y][x].getClass().equals(Road.class)){
+                number--;
+                map[y][x] = new BarberShop();
             }
         }
     }

@@ -9,6 +9,7 @@ public enum TerrainDisplay {
     ROCK("🪨 "),
     ROADBORDER(""),
     CAFE("☕"),
+    BARBER_SHOP("💈"),
     HOTEL("🏨");
 
     private String symbol;

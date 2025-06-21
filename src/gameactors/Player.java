@@ -36,6 +36,7 @@ public class Player implements Serializable{
     protected int number = 0;
     protected GameMap map;
     private int points = 0;
+    private boolean strizka = false;
     protected static final int[][] directions = {
         {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}
     };
@@ -79,6 +80,14 @@ public class Player implements Serializable{
             }
         }
         return null;
+    }
+
+    public boolean getStrizka() {
+        return strizka;
+    }
+
+    public void setStrizka(boolean strizka) {
+        this.strizka = strizka;
     }
 
     public int getTurnsInCastle() {
@@ -165,9 +174,16 @@ public class Player implements Serializable{
             processObjects(heroPos[1], heroPos[0], heroes.get(heroNumber));
         }
 
+        if (this instanceof Enemy){
+            return;
+        }
+
         Terrain terrain = map.getXY(heroPos[1], heroPos[0]);
         if (terrain instanceof TimeObject) {
             ((TimeObject) terrain).getInterface(this, (Vaitable) heroes.get(heroNumber));
+            if (heroes.get(heroNumber).isStrizka()) {
+                strizka = true;
+            }
         }
     }
 

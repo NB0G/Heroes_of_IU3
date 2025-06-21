@@ -12,7 +12,6 @@ import maps.Map;
 import other.Plasable;
 import other.TimeManager;
 import other.Vaitable;
-import terrains.TimeObject;
 
 public class Hero implements Plasable, Vaitable, Serializable{
     Random random = new Random();
@@ -23,7 +22,7 @@ public class Hero implements Plasable, Vaitable, Serializable{
     private int position[] = new int[2];
     private int team;
     private int stepsLeft;
-
+    private volatile boolean strizka = false;
     private volatile int endTime = 0;
 
     public int getEndTime() {
@@ -69,6 +68,14 @@ public class Hero implements Plasable, Vaitable, Serializable{
                     break;
             }
         }
+    }
+
+    public boolean isStrizka() {
+        return strizka;
+    }
+
+    public void setStrizka(boolean strizka) {
+        this.strizka = strizka;
     }
 
     public int getStepsLeft() {

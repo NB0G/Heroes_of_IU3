@@ -31,6 +31,7 @@ public class Game implements Serializable{
     private String mapOwner;
     private boolean isTest = false;
     private int startTimerTime = 0;
+    private int needTurnsToWin = 2;
 
     public Game(String playerNameInput){
         logger.info("Игра создана");
@@ -52,6 +53,7 @@ public class Game implements Serializable{
         gameMap.placeWings(2);
         gameMap.placeHotel(1);
         gameMap.placeCafe(1);
+        gameMap.placeBarberShop(2);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
     }
 
@@ -70,10 +72,13 @@ public class Game implements Serializable{
 
         gameMap.placeCoins(40);
         gameMap.placeWings(2);
-        gameMap.placeHotel(1);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
 
         // scanner.nextLine();
+    }
+
+    public void setNeedTurnsToWin(int needTurnsToWin) {
+        this.needTurnsToWin = needTurnsToWin;
     }
 
     public void setStartTimerTime(int time) {
@@ -173,15 +178,19 @@ public class Game implements Serializable{
             enemy.turn();
             gameMap.print();
 
+            if (player.getStrizka()){
+                needTurnsToWin = 1;
+            }
+
             int playerInCastle = player.getTurnsInCastle();
             int enemyInCastle = enemy.getTurnsInCastle();
-            if(playerInCastle == 1 && enemyInCastle == 0){
+            if(playerInCastle == needTurnsToWin && enemyInCastle == 0){
                 logger.info("Игра завершилась, победил игрок");
                 return 1;
-            } else if(playerInCastle == 0 && enemyInCastle == 1){
+            } else if(playerInCastle == 0 && enemyInCastle == 2){
                 logger.info("Игра завершилась, победил компьютер");
                 return 2;
-            } else if(playerInCastle == 1 && enemyInCastle == 1){
+            } else if(playerInCastle == needTurnsToWin && enemyInCastle == 2 && needTurnsToWin == 2){
                 logger.info("Игра завершилась, ничья");
                 return 0;
             }
