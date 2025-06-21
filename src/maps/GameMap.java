@@ -11,6 +11,7 @@ import terrains.types.BarberShop;
 import terrains.types.Cafe;
 import terrains.types.EnemyCastle;
 import terrains.types.EnemyTerritory;
+import terrains.types.Funiculer;
 import terrains.types.Hotel;
 import terrains.types.OurCastle;
 import terrains.types.OurTerritory;
@@ -195,6 +196,35 @@ public class GameMap extends Map implements Serializable {
             if(map[y][x].getClass().equals(Road.class)){
                 number--;
                 map[y][x] = new BarberShop();
+            }
+        }
+    }
+
+    public void placeFuniculer(int number){
+        while(number > 0){
+            int x = random.nextInt(sizeX);
+            int y = random.nextInt(sizeY);
+
+            if(map[y][x].getClass().equals(Void.class)){
+                number--;
+                map[y][x] = new Funiculer();
+            }
+        }
+
+        if (number > 0) {
+            ArrayList<int[]> funiculerCoords = new ArrayList<>();
+            for (int y = 0; y < sizeY; y++) {
+                for (int x = 0; x < sizeX; x++) {
+                    if (map[y][x] instanceof Funiculer) {
+                        funiculerCoords.add(new int[]{x, y});
+                    }
+                }
+            }
+            if (funiculerCoords.size() >= 2) {
+                Funiculer funiculer1 = (Funiculer) map[funiculerCoords.get(0)[1]][funiculerCoords.get(0)[0]];
+                Funiculer funiculer2 = (Funiculer) map[funiculerCoords.get(1)[1]][funiculerCoords.get(1)[0]];
+                funiculer1.setFuniculer2(funiculerCoords.get(1)[0], funiculerCoords.get(1)[1]);
+                funiculer2.setFuniculer2(funiculerCoords.get(0)[0], funiculerCoords.get(0)[1]);
             }
         }
     }

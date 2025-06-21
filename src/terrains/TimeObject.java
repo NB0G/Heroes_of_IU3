@@ -39,7 +39,7 @@ public abstract class TimeObject extends Terrain {
     public synchronized void getInterface(Player player, Vaitable vacationer){
     }
 
-    protected synchronized CopyOnWriteArrayList<Vaitable> getVacations() {
+    public synchronized CopyOnWriteArrayList<Vaitable> getVacations() {
         return vacations;
     }
 }

@@ -54,6 +54,7 @@ public class Game implements Serializable{
         gameMap.placeHotel(1);
         gameMap.placeCafe(1);
         gameMap.placeBarberShop(2);
+        gameMap.placeFuniculer(2);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
     }
 

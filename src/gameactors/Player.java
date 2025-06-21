@@ -1,6 +1,7 @@
 package gameactors;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,7 @@ import other.Battle;
 import other.Castle;
 import other.GameSaver;
 import other.Plasable;
+import other.Ticket;
 import other.Vaitable;
 import terrains.Terrain;
 import terrains.TimeObject;
@@ -37,6 +39,7 @@ public class Player implements Serializable{
     protected GameMap map;
     private int points = 0;
     private boolean strizka = false;
+    private CopyOnWriteArrayList<Ticket> tickets = new CopyOnWriteArrayList<>();
     protected static final int[][] directions = {
         {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}
     };
@@ -164,6 +167,18 @@ public class Player implements Serializable{
             hero.setWings();
             points += 6;
         }
+    }
+
+    public Plasable getObjectOnMap(int x, int y){
+        return map.getCharacterXY(x, y);
+    }
+
+    public synchronized void moveToCoords(int x, int y, Hero hero){
+        map.placeCharacter(hero.getPosition()[1], hero.getPosition()[0], new Nothing(hero.getPosition()[1], hero.getPosition()[0]));
+        int dx = x - hero.getPosition()[1];
+        int dy = y - hero.getPosition()[0];
+        hero.move(dx, dy);
+        map.placeCharacter(hero.getPosition()[1], hero.getPosition()[0], hero);
     }
 
     public void go(Terrain buildingToGo, Plasable itemToGo, int[] heroPos, int dx, int dy, int heroNumber){
@@ -440,6 +455,13 @@ public class Player implements Serializable{
                     }
                 }
                 break;
+            } else if(inp == 5) {
+                if (coins >= 5) {
+                    tickets.add(new Ticket());
+                    coins -= 5;
+                } else {
+                    logger.error("Недостаточно монет для покупки билета на фуникулер");
+                }
             } else {
                 logger.error("Неверный ввод при закупке ввод:{}", inp);
             }
@@ -452,7 +474,7 @@ public class Player implements Serializable{
         }
         switch (stage) {
             case 1:
-                System.out.println("(1)Купить постройку (2)Купить юнита (3)Нанять героя (4)Выйти");
+                System.out.println("(1)Купить постройку (2)Купить юнита (3)Нанять героя (4)Выйти (5)Купить билет на фуникулер");
                 break;
             case 2:
                 castle.printAvailableBuildings();
@@ -463,6 +485,13 @@ public class Player implements Serializable{
             default:
                 break;
         }
+    }
+
+    public CopyOnWriteArrayList<Ticket> getTickets() {
+        return tickets;
+    }
+    public void removeTicket(int index) {
+        tickets.remove(index);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {

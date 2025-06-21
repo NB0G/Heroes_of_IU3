@@ -27,16 +27,16 @@ public class BarberShop extends TimeObject{
         }
     }
 
-    private void showWelcome() {
+    public void showWelcome() {
         System.out.println("Добро пожаловать в барбершоп!");
     }
 
-    private void showFreePlaces() {
+    public void showFreePlaces() {
         int free = maxVacations - getVacations().size();
         System.out.println("Свободных мест: " + free);
     }
 
-    private void showOccupiedPlaces() {
+    public void showOccupiedPlaces() {
         if (getVacations().size() > 0) {
             System.out.println("Занятые места:");
             for (Vaitable v : getVacations()) {
@@ -46,12 +46,12 @@ public class BarberShop extends TimeObject{
         }
     }
 
-    private void showMenu() {
+    public void showMenu() {
         System.out.println("Выберите действие:");
         System.out.println("1 — обычная стрижка (" + priceSimple + " монет)\n2 — Крутая стрижка (быстрый выйгрыш, " + priceCool + " монет)\n3 — Выйти");
     }
 
-    private void processRest(Player player, Vaitable vacationer, int days, int price) {
+    public void processRest(Player player, Vaitable vacationer, int days, int price) {
         if (player.getCoins() < price) {
             System.out.println("Недостаточно монет для отдыха! Требуется: " + price);
             return;
@@ -70,7 +70,7 @@ public class BarberShop extends TimeObject{
         System.out.println("Ваш герой пострижен!");
     }
 
-    private void processWait(Vaitable vacationer) {
+    public void processWait(Vaitable vacationer) {
         waitEmptyVacations(vacationer);
     }
 
