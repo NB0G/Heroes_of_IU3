@@ -33,7 +33,10 @@ public class Hero implements Plasable, Vaitable, Serializable{
         this.endTime = endTime;
     }
 
-    public synchronized void waitUntillEndTime() {
+    public synchronized void waitUntillEndTime(boolean skip) {
+        if (skip){
+            return;
+        }
         while (TimeManager.getCurrentTime() < endTime) {
             try {
                 Thread.sleep(100);

@@ -6,5 +6,5 @@ public interface Vaitable {
     int getEndTime();
     void setEndTime(int endTime);
 
-    void waitUntillEndTime();
+    void waitUntillEndTime(boolean skip);
 }

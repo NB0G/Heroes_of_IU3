@@ -30,13 +30,21 @@ public class Funiculer extends TimeObject{
         }
     }
 
-    public void checkActive(Player player){
-        if (player.getObjectOnMap(funiculer2[0], funiculer2[1]).getClass().equals(Hero.class)){
-            isActive = false;
-        } else {
-            isActive = true;
-        }
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    // public void checkActive(Player player){
+    //     if (player.getObjectOnMap(funiculer2[0], funiculer2[1]).getClass().equals(Hero.class)){
+    //         isActive = false;
+    //     } else {
+    //         isActive = true;
+    //     }
+    // }
 
     @Override
     public synchronized void getInterface(Player player, Vaitable vacationer) {

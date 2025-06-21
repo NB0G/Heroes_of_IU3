@@ -21,6 +21,10 @@ public class Hotel extends TimeObject{
         maxVacations = 5;
     }
 
+    public void setHpBonus(int hpBonus){
+        this.hpBonus = hpBonus;
+    }
+
     @Override
     public synchronized void takeBonus(Vaitable vacationer) {
         if (vacationer instanceof Hero) {
@@ -55,21 +59,22 @@ public class Hotel extends TimeObject{
         System.out.println("1 — Отдых на 1 день (+15 hp, " + priceOneDay + " монет)\n2 — Отдых на 3 дня (+30 hp, " + priceThreeDays + " монет)\n3 — Выйти");
     }
 
-    private void processRest(Player player, Vaitable vacationer, int days, int bonus, int price) {
+    public boolean processRest(Player player, Vaitable vacationer, int days, int bonus, int price, boolean skip) {
         if (player.getCoins() < price) {
             System.out.println("Недостаточно монет для отдыха! Требуется: " + price);
-            return;
+            return false;
         } else {
             player.setCoins(player.getCoins() - price);
         }
         vacationer.setEndTime(TimeManager.getCurrentTime() + days * 20);
         addVacation(vacationer);
         System.out.println("Ожидание " + days + " дней...");
-        vacationer.waitUntillEndTime();
+        vacationer.waitUntillEndTime(skip);
         hpBonus = bonus;
         takeBonus(vacationer);
         removeVacation(vacationer);
         System.out.println("Ваш герой и его отряд отдохнули! +" + bonus + " к здоровью");
+        return true;
     }
 
     private void processWait(Vaitable vacationer) {
@@ -99,10 +104,10 @@ public class Hotel extends TimeObject{
             showMenu();
             int inp = scanner.nextInt();
             if (inp == 1) {
-                processRest(player, vacationer, 1, 15, priceOneDay);
+                processRest(player, vacationer, 1, 15, priceOneDay, false);
                 break;
             } else if (inp == 2) {
-                processRest(player, vacationer, 3, 30, priceThreeDays);
+                processRest(player, vacationer, 3, 30, priceThreeDays, false);
                 break;
             } else if (inp == 3) {
                 System.out.println("Вы покинули отель.");

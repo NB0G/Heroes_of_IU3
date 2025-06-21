@@ -24,6 +24,7 @@ import other.Vaitable;
 import terrains.Terrain;
 import terrains.TimeObject;
 import terrains.types.EnemyCastle;
+import terrains.types.Funiculer;
 import terrains.types.OurCastle;
 import terrains.types.Rock;
 
@@ -39,6 +40,7 @@ public class Player implements Serializable{
     protected GameMap map;
     private int points = 0;
     private boolean strizka = false;
+    // private ArrayList<Funiculer> funiculores = new ArrayList<Funiculer>();
     private CopyOnWriteArrayList<Ticket> tickets = new CopyOnWriteArrayList<>();
     protected static final int[][] directions = {
         {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}
@@ -185,6 +187,14 @@ public class Player implements Serializable{
     }
 
     public void go(Terrain buildingToGo, Plasable itemToGo, int[] heroPos, int dx, int dy, int heroNumber){
+        if (buildingToGo instanceof Funiculer){
+            ((Funiculer) buildingToGo).setActive(false);
+        }
+
+        if (map.getXY(heroPos[0], heroPos[1]) instanceof Funiculer){
+            ((Funiculer)map.getXY(heroPos[0], heroPos[1])).setActive(true);
+        }
+        
         map.placeCharacter(heroPos[1], heroPos[0], new Nothing(heroPos[1], heroPos[0]));
         heroes.get(heroNumber).move(dx, dy);
         map.placeCharacter(heroPos[1], heroPos[0], heroes.get(heroNumber));
