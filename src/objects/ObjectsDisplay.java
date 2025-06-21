@@ -3,7 +3,7 @@ public enum ObjectsDisplay {
     COIN("💎"),
     WINGS("🪽 "),
     NOTHING("");
-
+    
     private String symbol;
 
     ObjectsDisplay (String symbol){

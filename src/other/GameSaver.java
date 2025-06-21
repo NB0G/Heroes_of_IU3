@@ -16,6 +16,8 @@ import java.util.List;
 
 public class GameSaver {
     public static void saveGame(Game game, String fileName, String player){
+        game.setStartTimerTime(TimeManager.getCurrentTime());
+
         String path = "saves/games/" + player + "/";
 
         File directory = new File(path);

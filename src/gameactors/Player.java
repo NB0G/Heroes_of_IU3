@@ -18,7 +18,9 @@ import other.Battle;
 import other.Castle;
 import other.GameSaver;
 import other.Plasable;
+import other.Vaitable;
 import terrains.Terrain;
+import terrains.TimeObject;
 import terrains.types.EnemyCastle;
 import terrains.types.OurCastle;
 import terrains.types.Rock;
@@ -161,6 +163,11 @@ public class Player implements Serializable{
         map.placeCharacter(heroPos[1], heroPos[0], heroes.get(heroNumber));
         if(itemToGo instanceof Coin || itemToGo instanceof Wings){
             processObjects(heroPos[1], heroPos[0], heroes.get(heroNumber));
+        }
+
+        Terrain terrain = map.getXY(heroPos[1], heroPos[0]);
+        if (terrain instanceof TimeObject) {
+            ((TimeObject) terrain).getInterface(this, (Vaitable) heroes.get(heroNumber));
         }
     }
 

@@ -9,6 +9,7 @@ import other.Plasable;
 import terrains.Terrain;
 import terrains.types.EnemyCastle;
 import terrains.types.EnemyTerritory;
+import terrains.types.Hotel;
 import terrains.types.OurCastle;
 import terrains.types.OurTerritory;
 import terrains.types.Road;
@@ -156,6 +157,18 @@ public class GameMap extends Map implements Serializable {
 
             if(placeObjectXY(x, y, new Coin(x, y), new Terrain[] {new Void(), new Road(), new OurTerritory(), new EnemyTerritory()}) == 1){
                 number--;
+            }
+        }
+    }
+
+    public void placeHotel(int number){
+        while(number > 0){
+            int x = random.nextInt(sizeX);
+            int y = random.nextInt(sizeY);
+
+            if(map[y][x].getClass().equals(Rock.class)){
+                number--;
+                map[y][x] = new Hotel();
             }
         }
     }

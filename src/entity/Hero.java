@@ -10,8 +10,11 @@ import entity.types.Swordsman;
 import java.io.Serializable;
 import maps.Map;
 import other.Plasable;
+import other.TimeManager;
+import other.Vaitable;
+import terrains.TimeObject;
 
-public class Hero implements Plasable, Serializable{
+public class Hero implements Plasable, Vaitable, Serializable{
     Random random = new Random();
     private int speed = 0;
     private ArrayList<Character> units = new ArrayList<Character>();
@@ -20,6 +23,26 @@ public class Hero implements Plasable, Serializable{
     private int position[] = new int[2];
     private int team;
     private int stepsLeft;
+
+    private volatile int endTime = 0;
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public synchronized void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
+    public synchronized void waitUntillEndTime(TimeObject timeObject) {
+        while (TimeManager.getCurrentTime() < endTime) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 
     public Hero(int speed, int seed, int team){
         random.setSeed(seed);

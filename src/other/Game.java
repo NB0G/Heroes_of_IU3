@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import gameactors.Enemy;
 import gameactors.Player;
 import java.io.Serializable;
+import java.sql.Time;
 
 import java.util.Calendar;
 import java.util.Scanner;
@@ -28,6 +29,7 @@ public class Game implements Serializable{
     private String playerNameGlobal;
     private String mapOwner;
     private boolean isTest = false;
+    private int startTimerTime = 0;
 
     public Game(String playerNameInput){
         logger.info("Игра создана");
@@ -47,6 +49,7 @@ public class Game implements Serializable{
 
         gameMap.placeCoins(40);
         gameMap.placeWings(2);
+        gameMap.placeHotel(1);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
     }
 
@@ -65,9 +68,14 @@ public class Game implements Serializable{
 
         gameMap.placeCoins(40);
         gameMap.placeWings(2);
+        gameMap.placeHotel(1);
         gameMap.placeObjectXY(gameMap.getSizeX() - 1, 0, new Wings(gameMap.getSizeX() - 1, 0), new Terrain[] {new Void()});
 
         // scanner.nextLine();
+    }
+
+    public void setStartTimerTime(int time) {
+        startTimerTime = time;
     }
 
     private void setGameMap(){
@@ -134,6 +142,8 @@ public class Game implements Serializable{
 
     public int start(){
         scanner = new Scanner(System.in);
+        TimeManager.setCurrentTime(startTimerTime);
+        TimeManager.startTimer();
         logger.info("Игра началась");
         gameMap.print();
         player.initScanner();
